@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -11,6 +12,7 @@ namespace Chatter.Models
 {
     public class ChatsController : Controller
     {
+        
         private ChatterEntities db = new ChatterEntities();
 
         // GET: Chats
@@ -21,13 +23,44 @@ namespace Chatter.Models
 
         public JsonResult TestJson()
         {
-            string jsonTest = "{ \"firstName\": \"Bob\"," +
-                "\"lastName\": \"Sauce\", \"children\": [{" +
-                "\"firstName\": \"Barbie\", \"age\": 19 }," +
-                "{\"firstName\": \"Ron\", \"age\": null }] }";
+            string[] keyArr = db.Chats.Select(x => x.Message).ToArray();
+            //when making a qurry first create a varible 
+            var messageQuery =
+                from key in db.Chats
+                where key.Message == "Hello"
+                select key;
 
-                return Json(jsonTest, JsonRequestBehavior.AllowGet);
+            foreach(Chat key in messageQuery)
+            {
+                if(key.Message == "Hello")
+                {
+                    key.Message = "Goodbye";
+                }
             }
+            db.SaveChanges();
+
+            //string jsonTest = "{ \"firstName\": \"Bob\"," +
+            //    "\"lastName\": \"Sauce\", \"children\": [{" +
+            //    "\"firstName\": \"Barbie\", \"age\": 19 }," +
+            //    "{\"firstName\": \"Ron\", \"age\": null }] }";
+
+            var chats = from Chats in db.Chats
+                        orderby
+                            Chats.Timestamp descending
+                        select new
+                        {
+                            Chats.Message,
+                            Chats.AspNetUser.UserName
+
+                        };
+
+            var output = JsonConvert.SerializeObject(chats.ToList());
+            return Json(output, JsonRequestBehavior.AllowGet);
+
+            }
+
+        
+                
 
                 // GET: Chats/Details/5
                 public ActionResult Details(int? id)

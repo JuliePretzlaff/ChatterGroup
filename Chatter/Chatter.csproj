@@ -211,7 +211,7 @@
     <Compile Include="Models\Chat.cs">
       <DependentUpon>ChatterModel.tt</DependentUpon>
     </Compile>
-    <Compile Include="Models\ChatsController.cs" />
+    <Compile Include="Controllers\ChatsController.cs" />
     <Compile Include="Models\ChatterModel.Context.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

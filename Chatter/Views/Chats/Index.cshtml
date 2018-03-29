@@ -9,40 +9,26 @@
 <p>
     @Html.ActionLink("Create New", "Create")
 </p>
+
 <div id="response"></div>
 <button id="getChats" class="btn btn-primary">Get Chats</button>
-<button id="otherBtn">Other Button</button>
 @section Scripts {
 <script>
-        var jsonTest = { "firstName": "Bob", "lastName": "Sauce", "children": [{ "firstName": "Barbie", "age": 19, "hair": "brown" }, { "firstName": "Ron", "age": 7, "hair": "black" }] }
-        //now some jQuery
-        //$("#response").text(jsonTest.children[1].age);
+       var jsonTest = { "firstName": "Bob", "lastName": "Sauce", "children": [{ "firstName": "Barbie", "age": 19 }, { "firstName": "Ron", "age": null }] }
 
-        //$.each(jsonTest.children, function (i, ob) {
-        //    $.each(ob, function (i, ob) {
-        //        alert(i + ": " + ob);
-        //    });
-        //});
+       //now some jQuery
+        $.each(("#response").text(jsonTest.children.firstName));
 
-        //AJAX request using jQuery as a helper
-      //Notice this combines Razor syntax (@Url.Action()) in order to
-      //have the compiler figure out the exact path of the controller,
-      //alongside of jQuery.
-       @*$.get("@Url.Action("TestJson","Chats")", function (response) {
-           alert(response);
-        });*@
-
-    $("#otherBtn").click(function () {
-        $("#response").append("<p>" + jsonTest.firstName + "</p>")
-        $.get("@Url.Action("TestJson","Chats")", function (serverResponse) {
-            var jsonTest = JSON.parse(serverResponse);
-            console.log(jsonTest);
-            //$("#response").append(.text(jsonTest.firstName));
+    //this talks to controller
+        $.ajax({
+            type: 'POST',
+            url: "@Url.Action("TestJson")",
+            data: JSON.stringify(chats),
+            contentType: "application/JSON;charset=tf=8",
+            success: function () { alert("yay") },
+            error: function () { alert("NO")}
 
         });
-    });
-
 
 </script>
 }
-
